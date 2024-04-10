@@ -3,16 +3,27 @@ public class Coffee {
     private Double price;
     private String description;
     private int calories;
+    private boolean active;
 
-    Coffee(String name, Double price, String description, int calories) {
+    Coffee(String name, Double price, String description, int calories, boolean active) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.calories = calories;
+        this.active = active;
     }
     public void prepare() {
 
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public String getName() {
         return this.name;
     }

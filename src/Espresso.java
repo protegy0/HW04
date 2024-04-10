@@ -7,9 +7,9 @@ public class Espresso extends Coffee {
     private Boolean hasCinnamon;
     private Boolean hasSugar;
 
-    Espresso(String name, Double price, String description, int calories, String variety, int numOfShots,
+    Espresso(String name, Double price, String description, int calories, boolean active, String variety, int numOfShots,
              String milkType, Boolean hasChocolate, Boolean hasWhippedCream, Boolean hasCinnamon, Boolean hasSugar) {
-        super(name, price, description, calories);
+        super(name, price, description, calories, active);
         this.variety = variety;
         this.numOfShots = numOfShots;
         this.milkType = milkType;

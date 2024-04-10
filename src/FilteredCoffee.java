@@ -1,8 +1,8 @@
 public class FilteredCoffee extends Coffee {
     private String brewType;
 
-    FilteredCoffee(String name, Double price, String description, int calories, String brewType) {
-        super(name, price, description, calories);
+    FilteredCoffee(String name, Double price, String description, int calories, boolean active, String brewType) {
+        super(name, price, description, calories, active);
         this.brewType = brewType;
     }
 

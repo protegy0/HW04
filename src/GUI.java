@@ -4,6 +4,8 @@ import java.awt.event.*;
 import javax.swing.border.EmptyBorder;
 
 public class GUI implements ActionListener {
+
+
     JFrame frame;
 
     public GUI() {
