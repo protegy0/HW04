@@ -68,7 +68,7 @@ public class GUI extends JFrame implements ActionListener {
         setContentPane(contentPane);
         contentPane.setLayout(new CardLayout(0, 0));
         loginPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        contentPane.add(loginPanel, "name_201636701999700");
+        contentPane.add(loginPanel, "loginPanel");
         loginPanel.setLayout(new GridLayout(0, 1, 0, 0));
         loginPanel.add(welcomePanel);
         welcomePanel.add(welcomeLabel);
@@ -92,7 +92,7 @@ public class GUI extends JFrame implements ActionListener {
         nextButton.setActionCommand("nextButton");
         nextButton.addActionListener(this);
         panel_1.add(nextButton);
-        contentPane.add(panel_2, "name_201837378936800");
+        contentPane.add(panel_2, "selectionPanel");
         panel_2.setLayout(new GridLayout(2, 1, 0, 0));
         panel_3.setBorder(new CompoundBorder());
         panel_2.add(panel_3);
@@ -137,31 +137,20 @@ public class GUI extends JFrame implements ActionListener {
         panel_10.add(cinnamonRadio);
         panel_10.add(sugarRadio);
         panel_4.add(espressoOrderButton);
-        CardLayout cl = (CardLayout) contentPane.getLayout();
-
-    }
-
-
-    public void createLoginPanel() {
-
-    }
-
-    public void createSecondPanel() {
-
 
 
     }
+
+
+
     public void actionPerformed(ActionEvent e) {
-        if ("nextButton".contentEquals(e.getActionCommand())) {
-            createSecondPanel();
+        CardLayout cl = (CardLayout) contentPane.getLayout();
+        if (e.getSource() == nextButton) {
+            cl.show(contentPane, "selectionPanel");
         }
     }
 
-    public void createAndShowGUI() {
-        createLoginPanel();
-        frame.pack();
-        frame.setVisible(true);
-    }
+
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
