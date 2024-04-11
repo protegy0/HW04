@@ -1,11 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 public class GUI extends JFrame implements ActionListener {
 
+    Customer currentCustomer;
 
     JFrame frame;
     private JPanel contentPane;
@@ -107,6 +109,7 @@ public class GUI extends JFrame implements ActionListener {
         buttonGroup.add(darkRadio);
         panel_6.add(darkRadio);
         panel_3.add(filteredCoffeeOrderButton);
+        filteredCoffeeOrderButton.addActionListener(this);
         panel_2.add(panel_4);
         panel_4.setLayout(new GridLayout(5, 1, 0, 0));
         panel_4.add(panel_7);
@@ -137,6 +140,7 @@ public class GUI extends JFrame implements ActionListener {
         panel_10.add(cinnamonRadio);
         panel_10.add(sugarRadio);
         panel_4.add(espressoOrderButton);
+        espressoOrderButton.addActionListener(this);
 
 
     }
@@ -146,7 +150,90 @@ public class GUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) contentPane.getLayout();
         if (e.getSource() == nextButton) {
-            cl.show(contentPane, "selectionPanel");
+            if (textField.getText().equalsIgnoreCase("") || textField_1.getText().equalsIgnoreCase("") || textField_2.getText().equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(null, "Please fill out all fields");
+            } else {
+                if (premiumRadio.isSelected()) {
+                    currentCustomer = (new PremiumCustomer(textField.getText(), textField_1.getText(), textField_2.getText()));
+                } else {
+                    currentCustomer = (new RegularCustomer(textField.getText(), textField_1.getText(), textField_2.getText()));
+                }
+                cl.show(contentPane, "selectionPanel");
+            }
+        } else if (e.getSource() == filteredCoffeeOrderButton) {
+            if (!lightRadio.isSelected() && !mediumRadio.isSelected() && !darkRadio.isSelected()) {
+                JOptionPane.showMessageDialog(null, "Please choose a brew type");
+            } else if (lightRadio.isSelected()) {
+                currentCustomer.addOrder(new FilteredCoffee("Light Coffee", 3.49, "Lightly brewed filtered coffee",70, true, "light"));
+                JOptionPane.showMessageDialog(null, "Successfully added order");
+            } else if (mediumRadio.isSelected()) {
+                currentCustomer.addOrder(new FilteredCoffee("Medium Coffee", 3.49, "Medium brewed filtered coffee",60, true, "medium"));
+                JOptionPane.showMessageDialog(null, "Successfully added order");
+            } else if (darkRadio.isSelected()) {
+                currentCustomer.addOrder(new FilteredCoffee("Dark Coffee", 3.49, "Dark brewed filtered coffee",50, true, "dark"));
+                JOptionPane.showMessageDialog(null, "Successfully added order");
+            }
+        } else if (e.getSource() == espressoOrderButton) {
+            boolean hasChocolate = chocolateRadio.isSelected();
+            boolean hasWhippedCream = whippedCreamRadio.isSelected();
+            boolean hasCinnamon = cinnamonRadio.isSelected();
+            boolean hasSugar = sugarRadio.isSelected();
+
+            if ((!americanoRadio.isSelected() && !latteRadio.isSelected() && !mochaRadio.isSelected()
+                && !wholeRadio.isSelected() && !skimRadio.isSelected() && !almondRadio.isSelected())) {
+                JOptionPane.showMessageDialog(null, "Make sure you have selected a variety AND a milk type");
+            } else if (americanoRadio.isSelected()) {
+                if (wholeRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with whole milk",
+                            100, true, "Americano", (Integer) shotSpinner.getValue(),
+                            "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                } else if (skimRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with skim milk",
+                            90, true, "Americano", (Integer) shotSpinner.getValue(),
+                            "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                } else if (almondRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with almond milk",
+                            95, true, "Americano", (Integer) shotSpinner.getValue(),
+                            "almond", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                }
+            } else if (latteRadio.isSelected()) {
+                if (wholeRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with whole milk",
+                            100, true, "Latte", (Integer) shotSpinner.getValue(),
+                            "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                } else if (skimRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with skim milk",
+                            90, true, "Latte", (Integer) shotSpinner.getValue(),
+                            "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                } else if (almondRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with almond milk",
+                            95, true, "Latte", (Integer) shotSpinner.getValue(),
+                            "Almond", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                }
+            } else if (mochaRadio.isSelected()) {
+                if (wholeRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with whole milk",
+                            100, true, "Mocha", (Integer) shotSpinner.getValue(),
+                            "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                } else if (skimRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with skim milk",
+                            90, true, "Mocha", (Integer) shotSpinner.getValue(),
+                            "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                } else if (almondRadio.isSelected()) {
+                    currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with almond milk",
+                            95, true, "Mocha", (Integer) shotSpinner.getValue(),
+                            "Almond", hasChocolate, hasWhippedCream, hasCinnamon,
+                            hasSugar));
+                }
+            }
         }
     }
 

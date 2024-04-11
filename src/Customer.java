@@ -4,7 +4,7 @@ public abstract class Customer {
     private String name;
     private String address;
     private String phoneNumber;
-    private ArrayList<Coffee> orders;
+    private ArrayList<Coffee> orders = new ArrayList<>();
 
     Customer(String name, String address, String phoneNumber) {
         this.name = name;
@@ -13,6 +13,10 @@ public abstract class Customer {
     }
 
     public abstract void payCoffee();
+
+    public void addOrder(Coffee order) {
+        this.orders.add(order);
+    }
     public String getName() {
         return name;
     }
