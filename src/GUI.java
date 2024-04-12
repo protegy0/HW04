@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -64,8 +65,18 @@ public class GUI extends JFrame implements ActionListener {
     JButton espressoOrderButton = new JButton("Add order");
     JButton checkoutButton = new JButton("View Orders");
     JPanel preparePanel = new JPanel();
+    JPanel panel_11 = new JPanel();
+    JButton prepareButton = new JButton("Prepare Orders");
+    JButton moreOrdersButton = new JButton("Order More");
+    JButton exitButton = new JButton("Exit");
+    JPanel panel_12 = new JPanel();
+    JButton activeOrderDisplayButton = new JButton("Active/New Orders");
+    JButton oldOrderDisplayButton = new JButton("Prepared/Old Orders");
+    JPanel panel_13 = new JPanel();
     JScrollPane scrollPane = new JScrollPane();
-    JTextPane orderPane = new JTextPane();
+    JTextPane activeOrderPane = new JTextPane();
+    JScrollPane scrollPane_1 = new JScrollPane();
+    JTextPane preparedOrdersPane = new JTextPane();
 
     public GUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -149,10 +160,28 @@ public class GUI extends JFrame implements ActionListener {
         panel_4.add(checkoutButton);
         checkoutButton.addActionListener(this);
         contentPane.add(preparePanel, "preparePanel");
-        preparePanel.setLayout(new GridLayout(3, 1, 0, 0));
+        preparePanel.setLayout(new BorderLayout(0,0));
         preparePanel.add(scrollPane);
-        orderPane.setEditable(false);
-        scrollPane.setViewportView(orderPane);
+        preparePanel.add(panel_11, BorderLayout.SOUTH);
+        panel_11.add(prepareButton);
+        panel_11.add(moreOrdersButton);
+        panel_11.add(exitButton);
+        scrollPane.setToolTipText("Active");
+        preparePanel.add(scrollPane, BorderLayout.CENTER);
+        preparePanel.add(panel_12, BorderLayout.NORTH);
+        panel_12.add(activeOrderDisplayButton);
+        panel_12.add(oldOrderDisplayButton);
+        preparePanel.add(panel_13, BorderLayout.CENTER);
+        panel_13.setLayout(new CardLayout(0, 0));
+        panel_13.add(scrollPane, "Active Orders");
+        scrollPane.setViewportView(activeOrderPane);
+        panel_13.add(scrollPane_1, "Old Orders");
+        scrollPane_1.setViewportView(preparedOrdersPane);
+        preparedOrdersPane.setEditable(false);
+        activeOrderPane.setEditable(false);
+        activeOrderDisplayButton.addActionListener(this);
+        oldOrderDisplayButton.addActionListener(this);
+
 
 
     }
@@ -161,6 +190,7 @@ public class GUI extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         CardLayout cl = (CardLayout) contentPane.getLayout();
+        CardLayout orderFields = (CardLayout) panel_13.getLayout();
         if (e.getSource() == nextButton) {
             if (textField.getText().equalsIgnoreCase("") || textField_1.getText().equalsIgnoreCase("") || textField_2.getText().equalsIgnoreCase("")) {
                 JOptionPane.showMessageDialog(null, "Please fill out all fields");
@@ -260,17 +290,22 @@ public class GUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Please add at least one order");
             } else {
                 cl.show(contentPane, "preparePanel");
-                orderPane.setText("Orders for: " + currentCustomer.getName() + " (" + currentCustomer.getPhoneNumber() +
+                orderFields.show(panel_13, "Active Orders");
+                activeOrderPane.setText("Orders for: " + currentCustomer.getName() + " (" + currentCustomer.getPhoneNumber() +
                         ")\n--------------\n");
                 int orderNum = 1;
                 for (Coffee order : currentCustomer.getOrders()) {
-                    orderPane.setText(orderPane.getText() + "Order Number: " + orderNum + "\n" + order.prepare() + "\n" +
+                    activeOrderPane.setText(activeOrderPane.getText() + "Order Number: " + orderNum + "\n" + order.prepare() + "\n" +
                             "--------------\n");
                     orderNum++;
                 }
-                orderPane.setCaretPosition(0);
+                activeOrderPane.setCaretPosition(0);
             }
 
+        } else if (e.getSource() == activeOrderDisplayButton) {
+            orderFields.show(panel_13, "Active Orders");
+        } else if (e.getSource() == oldOrderDisplayButton) {
+            orderFields.show(panel_13, "Old Orders");
         }
     }
 
