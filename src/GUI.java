@@ -39,7 +39,7 @@ public class GUI extends JFrame implements ActionListener {
     JRadioButton lightRadio = new JRadioButton("Light");
     JRadioButton mediumRadio = new JRadioButton("Medium");
     JRadioButton darkRadio = new JRadioButton("Dark");
-    JButton filteredCoffeeOrderButton = new JButton("Add to order");
+    JButton filteredCoffeeOrderButton = new JButton("Add order");
     JPanel panel_4 = new JPanel();
     JPanel panel_7 = new JPanel();
     JLabel espresssoLabel = new JLabel("Espresso Options");
@@ -61,10 +61,15 @@ public class GUI extends JFrame implements ActionListener {
     JRadioButton whippedCreamRadio = new JRadioButton("Whipped Cream");
     JRadioButton cinnamonRadio = new JRadioButton("Cinnamon");
     JRadioButton sugarRadio = new JRadioButton("Sugar");
-    JButton espressoOrderButton = new JButton("Add to order");
+    JButton espressoOrderButton = new JButton("Add order");
+    JButton checkoutButton = new JButton("View Orders");
+    JPanel preparePanel = new JPanel();
+    JScrollPane scrollPane = new JScrollPane();
+    JTextPane orderPane = new JTextPane();
+
     public GUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 450, 300);
+        setBounds(100, 100, 450, 400);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -111,7 +116,7 @@ public class GUI extends JFrame implements ActionListener {
         panel_3.add(filteredCoffeeOrderButton);
         filteredCoffeeOrderButton.addActionListener(this);
         panel_2.add(panel_4);
-        panel_4.setLayout(new GridLayout(5, 1, 0, 0));
+        panel_4.setLayout(new GridLayout(6, 1, 0, 0));
         panel_4.add(panel_7);
         panel_7.add(espresssoLabel);
         panel_4.add(panel_8);
@@ -141,6 +146,13 @@ public class GUI extends JFrame implements ActionListener {
         panel_10.add(sugarRadio);
         panel_4.add(espressoOrderButton);
         espressoOrderButton.addActionListener(this);
+        panel_4.add(checkoutButton);
+        checkoutButton.addActionListener(this);
+        contentPane.add(preparePanel, "preparePanel");
+        preparePanel.setLayout(new GridLayout(3, 1, 0, 0));
+        preparePanel.add(scrollPane);
+        orderPane.setEditable(false);
+        scrollPane.setViewportView(orderPane);
 
 
     }
@@ -188,16 +200,19 @@ public class GUI extends JFrame implements ActionListener {
                             100, true, "Americano", (Integer) shotSpinner.getValue(),
                             "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 } else if (skimRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with skim milk",
                             90, true, "Americano", (Integer) shotSpinner.getValue(),
                             "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 } else if (almondRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with almond milk",
                             95, true, "Americano", (Integer) shotSpinner.getValue(),
                             "almond", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 }
             } else if (latteRadio.isSelected()) {
                 if (wholeRadio.isSelected()) {
@@ -205,16 +220,19 @@ public class GUI extends JFrame implements ActionListener {
                             100, true, "Latte", (Integer) shotSpinner.getValue(),
                             "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 } else if (skimRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with skim milk",
                             90, true, "Latte", (Integer) shotSpinner.getValue(),
                             "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 } else if (almondRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with almond milk",
                             95, true, "Latte", (Integer) shotSpinner.getValue(),
                             "Almond", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 }
             } else if (mochaRadio.isSelected()) {
                 if (wholeRadio.isSelected()) {
@@ -222,18 +240,37 @@ public class GUI extends JFrame implements ActionListener {
                             100, true, "Mocha", (Integer) shotSpinner.getValue(),
                             "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 } else if (skimRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with skim milk",
                             90, true, "Mocha", (Integer) shotSpinner.getValue(),
                             "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 } else if (almondRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with almond milk",
                             95, true, "Mocha", (Integer) shotSpinner.getValue(),
                             "Almond", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
+                    JOptionPane.showMessageDialog(null, "Successfully added order");
                 }
             }
+        } else if (e.getSource() == checkoutButton) {
+            if (currentCustomer.getOrders().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please add at least one order");
+            } else {
+                cl.show(contentPane, "preparePanel");
+                orderPane.setText("Orders for: " + currentCustomer.getName() + " (" + currentCustomer.getPhoneNumber() +
+                        ")\n--------------\n");
+                int orderNum = 1;
+                for (Coffee order : currentCustomer.getOrders()) {
+                    orderPane.setText(orderPane.getText() + "Order Number: " + orderNum + "\n" + order.prepare() + "\n" +
+                            "--------------\n");
+                    orderNum++;
+                }
+                orderPane.setCaretPosition(0);
+            }
+
         }
     }
 

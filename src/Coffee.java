@@ -12,9 +12,7 @@ public class Coffee {
         this.calories = calories;
         this.active = active;
     }
-    public void prepare() {
 
-    }
 
     public boolean isActive() {
         return active;
@@ -22,6 +20,12 @@ public class Coffee {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+    public String prepare() {
+        this.setActive(false);
+        return this.getDescription() + ", " + this.getCalories() + " calories - $" + this.getPrice()  + "\nActive: " +
+                this.isActive();
+
     }
 
     public String getName() {

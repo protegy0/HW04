@@ -13,4 +13,5 @@ public class FilteredCoffee extends Coffee {
     public void setBrewType(String brewType) {
         this.brewType = brewType;
     }
+
 }

@@ -40,4 +40,8 @@ public abstract class Customer {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public ArrayList<Coffee> getOrders() {
+        return this.orders;
+    }
 }

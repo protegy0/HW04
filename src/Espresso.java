@@ -74,4 +74,14 @@ public class Espresso extends Coffee {
     public void setHasCinnamon(Boolean hasCinnamon) {
         this.hasCinnamon = hasCinnamon;
     }
+
+    @Override
+    public String prepare() {
+        this.setActive(false);
+        return this.getDescription() + "\n" + this.getNumOfShots() + " shot(s) of espresso " +
+                "- Chocolate: " + this.getHasChocolate() + " - Whipped Cream: " + this.getHasWhippedCream() +
+                " - Cinnamon: " + this.getHasCinnamon() + " - Sugar: " + this.getHasSugar() + "\n" +
+                this.getCalories() + " calories - $" + this.getPrice()+ "\nActive: " +
+                this.isActive();
+    }
 }
