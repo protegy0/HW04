@@ -60,4 +60,10 @@ public class Coffee {
     public void setCalories(int calories) {
         this.calories = calories;
     }
+
+    @Override
+    public String toString() {
+        return this.getDescription() + "\nActive: " + this.isActive();
+
+    }
 }

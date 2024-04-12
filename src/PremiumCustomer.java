@@ -4,8 +4,8 @@ public class PremiumCustomer extends Customer {
     }
 
     @Override
-    public void payCoffee() {
-
+    public String payCoffee() {
+        return "Premium customers can pay with Cash, Card, or BTC, all with a 10% discount";
     }
 
 

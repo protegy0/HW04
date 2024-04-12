@@ -12,10 +12,13 @@ public abstract class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-    public abstract void payCoffee();
+    public abstract String payCoffee();
 
     public void addOrder(Coffee order) {
         this.orders.add(order);
+    }
+    public void clearOrders() {
+        this.orders.clear();
     }
     public String getName() {
         return name;

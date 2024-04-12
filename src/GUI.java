@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -77,6 +78,10 @@ public class GUI extends JFrame implements ActionListener {
     JTextPane activeOrderPane = new JTextPane();
     JScrollPane scrollPane_1 = new JScrollPane();
     JTextPane preparedOrdersPane = new JTextPane();
+    boolean prepared = false;
+    static ArrayList<Coffee> preparedOrders = new ArrayList<>();
+    int preparedOrderNum = 1;
+    boolean readFromFile = false;
 
     public GUI() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -181,6 +186,9 @@ public class GUI extends JFrame implements ActionListener {
         activeOrderPane.setEditable(false);
         activeOrderDisplayButton.addActionListener(this);
         oldOrderDisplayButton.addActionListener(this);
+        prepareButton.addActionListener(this);
+        moreOrdersButton.addActionListener(this);
+        exitButton.addActionListener(this);
 
 
 
@@ -193,7 +201,7 @@ public class GUI extends JFrame implements ActionListener {
         CardLayout orderFields = (CardLayout) panel_13.getLayout();
         if (e.getSource() == nextButton) {
             if (textField.getText().equalsIgnoreCase("") || textField_1.getText().equalsIgnoreCase("") || textField_2.getText().equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "Please fill out all fields");
+                JOptionPane.showMessageDialog(contentPane, "Please fill out all fields");
             } else {
                 if (premiumRadio.isSelected()) {
                     currentCustomer = (new PremiumCustomer(textField.getText(), textField_1.getText(), textField_2.getText()));
@@ -204,16 +212,16 @@ public class GUI extends JFrame implements ActionListener {
             }
         } else if (e.getSource() == filteredCoffeeOrderButton) {
             if (!lightRadio.isSelected() && !mediumRadio.isSelected() && !darkRadio.isSelected()) {
-                JOptionPane.showMessageDialog(null, "Please choose a brew type");
+                JOptionPane.showMessageDialog(contentPane, "Please choose a brew type");
             } else if (lightRadio.isSelected()) {
                 currentCustomer.addOrder(new FilteredCoffee("Light Coffee", 3.49, "Lightly brewed filtered coffee",70, true, "light"));
-                JOptionPane.showMessageDialog(null, "Successfully added order");
+                JOptionPane.showMessageDialog(contentPane, "Successfully added order");
             } else if (mediumRadio.isSelected()) {
                 currentCustomer.addOrder(new FilteredCoffee("Medium Coffee", 3.49, "Medium brewed filtered coffee",60, true, "medium"));
-                JOptionPane.showMessageDialog(null, "Successfully added order");
+                JOptionPane.showMessageDialog(contentPane, "Successfully added order");
             } else if (darkRadio.isSelected()) {
                 currentCustomer.addOrder(new FilteredCoffee("Dark Coffee", 3.49, "Dark brewed filtered coffee",50, true, "dark"));
-                JOptionPane.showMessageDialog(null, "Successfully added order");
+                JOptionPane.showMessageDialog(contentPane, "Successfully added order");
             }
         } else if (e.getSource() == espressoOrderButton) {
             boolean hasChocolate = chocolateRadio.isSelected();
@@ -223,26 +231,26 @@ public class GUI extends JFrame implements ActionListener {
 
             if ((!americanoRadio.isSelected() && !latteRadio.isSelected() && !mochaRadio.isSelected()
                 && !wholeRadio.isSelected() && !skimRadio.isSelected() && !almondRadio.isSelected())) {
-                JOptionPane.showMessageDialog(null, "Make sure you have selected a variety AND a milk type");
+                JOptionPane.showMessageDialog(contentPane, "Make sure you have selected a variety AND a milk type");
             } else if (americanoRadio.isSelected()) {
                 if (wholeRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with whole milk",
                             100, true, "Americano", (Integer) shotSpinner.getValue(),
                             "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 } else if (skimRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with skim milk",
                             90, true, "Americano", (Integer) shotSpinner.getValue(),
                             "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 } else if (almondRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Americano", 5.49, "Americano with almond milk",
                             95, true, "Americano", (Integer) shotSpinner.getValue(),
                             "almond", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 }
             } else if (latteRadio.isSelected()) {
                 if (wholeRadio.isSelected()) {
@@ -250,19 +258,19 @@ public class GUI extends JFrame implements ActionListener {
                             100, true, "Latte", (Integer) shotSpinner.getValue(),
                             "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 } else if (skimRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with skim milk",
                             90, true, "Latte", (Integer) shotSpinner.getValue(),
                             "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 } else if (almondRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Latte", 5.49, "Latte with almond milk",
                             95, true, "Latte", (Integer) shotSpinner.getValue(),
                             "Almond", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 }
             } else if (mochaRadio.isSelected()) {
                 if (wholeRadio.isSelected()) {
@@ -270,53 +278,159 @@ public class GUI extends JFrame implements ActionListener {
                             100, true, "Mocha", (Integer) shotSpinner.getValue(),
                             "Whole", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 } else if (skimRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with skim milk",
                             90, true, "Mocha", (Integer) shotSpinner.getValue(),
                             "Skim", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 } else if (almondRadio.isSelected()) {
                     currentCustomer.addOrder(new Espresso("Mocha", 5.49, "Mocha with almond milk",
                             95, true, "Mocha", (Integer) shotSpinner.getValue(),
                             "Almond", hasChocolate, hasWhippedCream, hasCinnamon,
                             hasSugar));
-                    JOptionPane.showMessageDialog(null, "Successfully added order");
+                    JOptionPane.showMessageDialog(contentPane, "Successfully added order");
                 }
             }
         } else if (e.getSource() == checkoutButton) {
             if (currentCustomer.getOrders().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please add at least one order");
+                JOptionPane.showMessageDialog(contentPane, "Please add at least one order");
             } else {
                 cl.show(contentPane, "preparePanel");
                 orderFields.show(panel_13, "Active Orders");
-                activeOrderPane.setText("Orders for: " + currentCustomer.getName() + " (" + currentCustomer.getPhoneNumber() +
-                        ")\n--------------\n");
+                if (currentCustomer instanceof PremiumCustomer) {
+                    activeOrderPane.setText("Orders for Premium Customer: " + currentCustomer.getName() + " (" + currentCustomer.getPhoneNumber() +
+                            ")\n\n--------------\n");
+                } else if (currentCustomer instanceof RegularCustomer) {
+                    activeOrderPane.setText("Orders for Regular Customer: " + currentCustomer.getName() + " (" + currentCustomer.getPhoneNumber() +
+                            ")\n--------------\n");
+                }
+                if (!readFromFile) {
+                    preparedOrdersPane.setText("");
+                    preparedOrderNum = 1;
+                    for (Coffee order : preparedOrders) {
+                        preparedOrdersPane.setText(preparedOrdersPane.getText() + "Order Number: " + preparedOrderNum + "\n" + order.prepare() + "\n" +
+                                "--------------\n");
+                        preparedOrderNum++;
+                    }
+                    readFromFile = true;
+                }
+
                 int orderNum = 1;
                 for (Coffee order : currentCustomer.getOrders()) {
-                    activeOrderPane.setText(activeOrderPane.getText() + "Order Number: " + orderNum + "\n" + order.prepare() + "\n" +
+                    activeOrderPane.setText(activeOrderPane.getText() + "Order Number: " + orderNum + "\n" + order + "\n" +
                             "--------------\n");
                     orderNum++;
+
                 }
+
                 activeOrderPane.setCaretPosition(0);
+                prepared = false;
             }
 
         } else if (e.getSource() == activeOrderDisplayButton) {
             orderFields.show(panel_13, "Active Orders");
         } else if (e.getSource() == oldOrderDisplayButton) {
             orderFields.show(panel_13, "Old Orders");
+        } else if (e.getSource() == prepareButton) {
+            if (!prepared) {
+                preparedOrders.addAll(currentCustomer.getOrders());
+                preparedOrdersPane.setText("");
+                preparedOrderNum = 1;
+                for (Coffee order : preparedOrders) {
+                    preparedOrdersPane.setText(preparedOrdersPane.getText() + "Order Number: " + preparedOrderNum + "\n" + order.prepare() + "\n" +
+                            "--------------\n");
+                    preparedOrderNum++;
+                }
+                currentCustomer.clearOrders();
+
+                JOptionPane.showMessageDialog(contentPane, "Orders have been prepared!\n" + currentCustomer.payCoffee());
+                prepared = true;
+            } else {
+                JOptionPane.showMessageDialog(contentPane, "Orders have already been prepared.\n" + currentCustomer.payCoffee() );
+            }
+        } else if (e.getSource() == moreOrdersButton) {
+            shotSpinner.setValue(0);
+            chocolateRadio.setSelected(false);
+            whippedCreamRadio.setSelected(false);
+            cinnamonRadio.setSelected(false);
+            sugarRadio.setSelected(false);
+            buttonGroup.clearSelection();
+            buttonGroup_1.clearSelection();
+            buttonGroup_2.clearSelection();
+            cl.show(contentPane, "selectionPanel");
+        } else if (e.getSource() == exitButton) {
+            try {
+                writeOrdersToFile(preparedOrders);
+                System.exit(0);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
 
+    public static void writeOrdersToFile(ArrayList<Coffee> coffeeList) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("oldOrders.txt"));
+        for (Coffee order : coffeeList) {
+            if (order instanceof FilteredCoffee) {
+                writer.write("F " + ((FilteredCoffee) order).getBrewType() + " " + order.getCalories() + "\n");
+            } else if (order instanceof Espresso) {
+                writer.write("E " + ((Espresso) order).getVariety() + " " + ((Espresso) order).getNumOfShots() +
+                            " " + ((Espresso) order).getMilkType() + " " + ((Espresso) order).getHasChocolate() + " " +
+                            ((Espresso) order).getHasWhippedCream() + " " + ((Espresso) order).getHasCinnamon() + " " +
+                            ((Espresso) order).getHasSugar() + " " + order.getCalories() + "\n");
 
-    public static void main(String[] args) {
+            }
+        }
+        writer.close();
+
+    }
+
+    public static void readOrdersFromFile() throws IOException {
+        ArrayList<String[]> textList = new ArrayList<String[]>();
+        BufferedReader reader = new BufferedReader(new FileReader("oldOrders.txt"));
+        try {
+            String line = reader.readLine();
+            String[] elms;
+            while(line!=null) {
+                elms = line.split(" ");
+                line = reader.readLine();
+                textList.add(elms);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (String[] lines : textList) {
+            if (lines[0].equalsIgnoreCase("F")) {
+                switch (lines[1]) {
+                    case "light":
+                        preparedOrders.add(new FilteredCoffee("Light Coffee", 3.49, "Lightly brewed filtered coffee",70, true, "light"));
+                        break;
+                    case "medium":
+                        preparedOrders.add(new FilteredCoffee("Medium Coffee", 3.49, "Medium brewed filtered coffee",70, true, "medium"));
+                        break;
+                    case "dark":
+                        preparedOrders.add(new FilteredCoffee("Dark Coffee", 3.49, "Dark brewed filtered coffee",70, true, "dark"));
+                        break;
+                }
+            } else if (lines[0].equalsIgnoreCase("E")) {
+                preparedOrders.add(new Espresso(lines[1], 5.49, (lines[1] + " with " + lines[3].toLowerCase() + " milk"), Integer.parseInt(lines[8]), false,
+                                    lines[1], Integer.parseInt(lines[2]), lines[3], Boolean.getBoolean(lines[4]), Boolean.getBoolean(lines[5]),
+                                    Boolean.getBoolean(lines[6]), Boolean.getBoolean(lines[7])));
+            }
+        }
+        reader.close();
+    }
+    public static void main(String[] args) throws IOException {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
                     GUI gui = new GUI();
+                    readOrdersFromFile();
                     gui.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

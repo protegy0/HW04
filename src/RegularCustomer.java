@@ -4,7 +4,7 @@ public class RegularCustomer extends Customer {
     }
 
     @Override
-    public void payCoffee() {
-
+    public String payCoffee() {
+        return "Regular customers can pay with Card";
     }
 }

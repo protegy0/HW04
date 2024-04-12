@@ -1,0 +1,4 @@
+F medium 70
+F dark 50
+E Americano 0 Whole false false true false 100
+E Latte 2 Almond true true true false 95
